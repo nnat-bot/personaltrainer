@@ -23,3 +23,10 @@ export type Training = {
   activity: string;
   customer: CustomerData & { id: number };
 };
+
+export type TrainingData = {
+  date: string;
+  activity: string;
+  duration: number;
+  customer: string;
+};
