@@ -3,9 +3,10 @@ import { AgGridReact } from 'ag-grid-react';
 import { themeMaterial } from 'ag-grid-community';
 import type { ColDef, ICellRendererParams } from 'ag-grid-community';
 import { Alert, Button, Snackbar, Stack, TextField } from '@mui/material';
-import { deleteCustomer, getCustomers } from '../api';
-import type { Customer } from '../types';
+import { addCustomer, deleteCustomer, getCustomers, updateCustomer } from '../api';
+import type { Customer, CustomerData } from '../types';
 import ConfirmDialog from './ConfirmDialog';
+import CustomerDialog from './CustomerDialog';
 
 const dataColumns: ColDef<Customer>[] = [
   { field: 'firstname', headerName: 'First name' },
@@ -50,18 +51,34 @@ export default function CustomerList() {
       });
   }, []);
 
-  const handleDeleteConfirm = () => {
-    if (!customerToDelete) return;
-    deleteCustomer(customerToDelete._links.self.href)
+  const runAction = (action: Promise<void>, successMessage: string, errorMessage: string) => {
+    action
       .then(() => {
         fetchCustomers();
-        setMessage('Customer deleted');
+        setMessage(successMessage);
       })
       .catch(err => {
         console.error(err);
-        setMessage('Could not delete customer');
-      })
-      .finally(() => setCustomerToDelete(null));
+        setMessage(errorMessage);
+      });
+  };
+
+  const handleAdd = (customer: CustomerData) => {
+    runAction(addCustomer(customer), 'Customer added', 'Could not add customer');
+  };
+
+  const handleUpdate = (url: string, customer: CustomerData) => {
+    runAction(updateCustomer(url, customer), 'Customer updated', 'Could not update customer');
+  };
+
+  const handleDeleteConfirm = () => {
+    if (!customerToDelete) return;
+    runAction(
+      deleteCustomer(customerToDelete._links.self.href),
+      'Customer deleted',
+      'Could not delete customer',
+    );
+    setCustomerToDelete(null);
   };
 
   const columnDefs: ColDef<Customer>[] = [
@@ -71,25 +88,36 @@ export default function CustomerList() {
       sortable: false,
       filter: false,
       pinned: 'right',
-      minWidth: 120,
+      minWidth: 180,
       cellRenderer: (params: ICellRendererParams<Customer>) =>
         params.data && (
-          <Button size="small" color="error" onClick={() => setCustomerToDelete(params.data!)}>
-            Delete
-          </Button>
+          <Stack direction="row" spacing={1} sx={{ height: '100%', alignItems: 'center' }}>
+            <CustomerDialog
+              title="Edit customer"
+              buttonText="Edit"
+              initialCustomer={params.data}
+              onSave={customer => handleUpdate(params.data!._links.self.href, customer)}
+            />
+            <Button size="small" color="error" onClick={() => setCustomerToDelete(params.data!)}>
+              Delete
+            </Button>
+          </Stack>
         ),
     },
   ];
 
   return (
     <Stack spacing={2} sx={{ my: 2 }}>
-      <TextField
-        size="small"
-        label="Search customers"
-        value={search}
-        onChange={e => setSearch(e.target.value)}
-        sx={{ maxWidth: 320 }}
-      />
+      <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{ alignItems: { sm: 'center' } }}>
+        <CustomerDialog title="New customer" buttonText="Add customer" onSave={handleAdd} />
+        <TextField
+          size="small"
+          label="Search customers"
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+          sx={{ maxWidth: 320 }}
+        />
+      </Stack>
 
       {error && <Alert severity="error">{error}</Alert>}
 
