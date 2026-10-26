@@ -1,7 +1,7 @@
-import CustomerList from './components/CustomerList';
+import TrainingList from './components/TrainingList';
 
 function App() {
-  return <CustomerList />;
+  return <TrainingList />;
 }
 
 export default App;
