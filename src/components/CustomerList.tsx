@@ -3,8 +3,9 @@ import { AgGridReact } from 'ag-grid-react';
 import { themeMaterial } from 'ag-grid-community';
 import type { ColDef, ICellRendererParams } from 'ag-grid-community';
 import { Alert, Button, Snackbar, Stack, TextField } from '@mui/material';
-import { addCustomer, deleteCustomer, getCustomers, updateCustomer } from '../api';
-import type { Customer, CustomerData } from '../types';
+import { addCustomer, addTraining, deleteCustomer, getCustomers, updateCustomer } from '../api';
+import type { Customer, CustomerData, TrainingData } from '../types';
+import AddTrainingDialog from './AddTrainingDialog';
 import ConfirmDialog from './ConfirmDialog';
 import CustomerDialog from './CustomerDialog';
 
@@ -71,6 +72,10 @@ export default function CustomerList() {
     runAction(updateCustomer(url, customer), 'Customer updated', 'Could not update customer');
   };
 
+  const handleAddTraining = (training: TrainingData) => {
+    runAction(addTraining(training), 'Training added', 'Could not add training');
+  };
+
   const handleDeleteConfirm = () => {
     if (!customerToDelete) return;
     runAction(
@@ -88,7 +93,7 @@ export default function CustomerList() {
       sortable: false,
       filter: false,
       pinned: 'right',
-      minWidth: 180,
+      minWidth: 300,
       cellRenderer: (params: ICellRendererParams<Customer>) =>
         params.data && (
           <Stack direction="row" spacing={1} sx={{ height: '100%', alignItems: 'center' }}>
@@ -98,6 +103,7 @@ export default function CustomerList() {
               initialCustomer={params.data}
               onSave={customer => handleUpdate(params.data!._links.self.href, customer)}
             />
+            <AddTrainingDialog customer={params.data} onSave={handleAddTraining} />
             <Button size="small" color="error" onClick={() => setCustomerToDelete(params.data!)}>
               Delete
             </Button>
