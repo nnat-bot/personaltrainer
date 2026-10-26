@@ -1,32 +1,48 @@
-# React + TypeScript + Vite
+# Personal Trainer
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Front end for a personal trainer company's customer database, built with React and TypeScript.
+Final project for the Front End Programming course (SOF004AS3AE-3008) at Haaga-Helia.
 
-Currently, two official plugins are available:
+## Features (Part 1)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- **Customers page**: list of all customers
+- **Trainings page**: list of all trainings with the customer's name and the date formatted as `dd.mm.yyyy hh:mm`
+- **Sorting**: click any column header
+- **Searching**: a search field that matches all columns, plus a filter under each column header
+- **Navigation**: tabs in the top bar, with a separate URL for each page (`/customers`, `/trainings`)
+- Error message if the data cannot be loaded
 
-## React Compiler
+## Tech stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- React + TypeScript + Vite
+- [Material UI](https://mui.com/) – app bar, tabs, inputs
+- [AG Grid](https://www.ag-grid.com/) – data tables with sorting, filtering and pagination
+- [React Router](https://reactrouter.com/) – navigation
+- [Day.js](https://day.js.org/) – date formatting
 
-## Expanding the Oxlint configuration
+## Project structure
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+```
+src/
+├── api.ts                     # REST API calls
+├── types.ts                   # TypeScript types for customers and trainings
+├── utils.ts                   # Date formatting helper
+├── App.tsx                    # Layout: app bar and navigation tabs
+├── main.tsx                   # Routes and app start-up
+└── components/
+    ├── CustomerList.tsx       # Customers page
+    └── TrainingList.tsx       # Trainings page
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+## Running locally
+
+```bash
+npm install
+npm run dev
+```
+
+Then open http://localhost:5173.
+
+## REST API
+
+[Personal Trainer REST API documentation](https://juhahinkula.github.io/personaltrainerdocs/)
