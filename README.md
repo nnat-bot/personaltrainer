@@ -12,6 +12,14 @@ Final project for the Front End Programming course (SOF004AS3AE-3008) at Haaga-H
 - **Navigation**: tabs in the top bar, with a separate URL for each page (`/customers`, `/trainings`)
 - Error message if the data cannot be loaded
 
+## Features (Part 2)
+
+- **Add and edit customers** in a form dialog, with a "Required" message under each empty field
+- **Delete customers** with a Yes/No confirmation dialog that warns that the customer's trainings are deleted too
+- **Add a training to a customer** from the customer list, with a date and time picker (`dd.mm.yyyy hh:mm`, 24-hour clock)
+- **Delete trainings** with the same reusable Yes/No confirmation dialog
+- Notification after every add, edit and delete
+
 ## Tech stack
 
 - React + TypeScript + Vite
@@ -19,6 +27,7 @@ Final project for the Front End Programming course (SOF004AS3AE-3008) at Haaga-H
 - [AG Grid](https://www.ag-grid.com/) – data tables with sorting, filtering and pagination
 - [React Router](https://reactrouter.com/) – navigation
 - [Day.js](https://day.js.org/) – date formatting
+- [MUI X Date Pickers](https://mui.com/x/react-date-pickers/) – date and time picker
 
 ## Project structure
 
