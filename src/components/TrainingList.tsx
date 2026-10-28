@@ -1,13 +1,18 @@
 import { useEffect, useState } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import { themeMaterial } from 'ag-grid-community';
-import type { ColDef } from 'ag-grid-community';
-import { Alert, Stack, TextField } from '@mui/material';
-import { getTrainings } from '../api';
+import type { ColDef, ICellRendererParams } from 'ag-grid-community';
+import { Alert, Button, Snackbar, Stack, TextField } from '@mui/material';
+import { deleteTraining, getTrainings } from '../api';
 import type { Training } from '../types';
 import { formatDateTime } from '../utils';
+import ConfirmDialog from './ConfirmDialog';
 
-const columnDefs: ColDef<Training>[] = [
+function customerName(training: Training): string {
+  return training.customer ? `${training.customer.firstname} ${training.customer.lastname}` : '';
+}
+
+const dataColumns: ColDef<Training>[] = [
   {
     field: 'date',
     headerName: 'Date',
@@ -25,10 +30,7 @@ const columnDefs: ColDef<Training>[] = [
   {
     colId: 'customer',
     headerName: 'Customer',
-    valueGetter: params =>
-      params.data?.customer
-        ? `${params.data.customer.firstname} ${params.data.customer.lastname}`
-        : '',
+    valueGetter: params => (params.data ? customerName(params.data) : ''),
   },
 ];
 
@@ -44,6 +46,17 @@ export default function TrainingList() {
   const [trainings, setTrainings] = useState<Training[]>([]);
   const [search, setSearch] = useState('');
   const [error, setError] = useState('');
+  const [message, setMessage] = useState('');
+  const [trainingToDelete, setTrainingToDelete] = useState<Training | null>(null);
+
+  const fetchTrainings = () => {
+    getTrainings()
+      .then(setTrainings)
+      .catch(err => {
+        console.error(err);
+        setError('Could not load trainings. Please try again later.');
+      });
+  };
 
   useEffect(() => {
     getTrainings()
@@ -53,6 +66,37 @@ export default function TrainingList() {
         setError('Could not load trainings. Please try again later.');
       });
   }, []);
+
+  const handleDeleteConfirm = () => {
+    if (!trainingToDelete) return;
+    deleteTraining(trainingToDelete.id)
+      .then(() => {
+        fetchTrainings();
+        setMessage('Training deleted');
+      })
+      .catch(err => {
+        console.error(err);
+        setMessage('Could not delete training');
+      });
+    setTrainingToDelete(null);
+  };
+
+  const columnDefs: ColDef<Training>[] = [
+    ...dataColumns,
+    {
+      headerName: 'Actions',
+      sortable: false,
+      filter: false,
+      pinned: 'right',
+      minWidth: 120,
+      cellRenderer: (params: ICellRendererParams<Training>) =>
+        params.data && (
+          <Button size="small" color="error" onClick={() => setTrainingToDelete(params.data!)}>
+            Delete
+          </Button>
+        ),
+    },
+  ];
 
   return (
     <Stack spacing={2} sx={{ my: 2 }}>
@@ -78,6 +122,25 @@ export default function TrainingList() {
           theme={themeMaterial}
         />
       </div>
+
+      <ConfirmDialog
+        open={trainingToDelete !== null}
+        title="Delete training?"
+        message={
+          trainingToDelete
+            ? `Delete ${trainingToDelete.activity} on ${formatDateTime(trainingToDelete.date)} (${customerName(trainingToDelete)})? This cannot be undone.`
+            : ''
+        }
+        onConfirm={handleDeleteConfirm}
+        onCancel={() => setTrainingToDelete(null)}
+      />
+
+      <Snackbar
+        open={message !== ''}
+        autoHideDuration={3000}
+        onClose={() => setMessage('')}
+        message={message}
+      />
     </Stack>
   );
 }
