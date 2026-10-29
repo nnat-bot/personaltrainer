@@ -2,6 +2,7 @@
 
 Front end for a personal trainer company's customer database, built with React and TypeScript.
 Final project for the Front End Programming course (SOF004AS3AE-3008) at Haaga-Helia.
+**Live demo:** https://thy-personaltrainer.netlify.app
 
 ## Features (Part 1)
 
@@ -20,6 +21,12 @@ Final project for the Front End Programming course (SOF004AS3AE-3008) at Haaga-H
 - **Delete trainings** with the same reusable Yes/No confirmation dialog
 - Notification after every add, edit and delete
 
+## Features (Part 3)
+
+- **Export customers to CSV**, with only the data columns (no button columns)
+- **Calendar page** showing all trainings in month, week and day views
+- **Deployed to Netlify**, with automatic deploys on every push to `main`
+
 ## Tech stack
 
 - React + TypeScript + Vite
@@ -28,6 +35,7 @@ Final project for the Front End Programming course (SOF004AS3AE-3008) at Haaga-H
 - [React Router](https://reactrouter.com/) – navigation
 - [Day.js](https://day.js.org/) – date formatting
 - [MUI X Date Pickers](https://mui.com/x/react-date-pickers/) – date and time picker
+- [FullCalendar](https://fullcalendar.io/) – training calendar
 
 ## Project structure
 
