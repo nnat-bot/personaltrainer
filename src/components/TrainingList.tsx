@@ -5,12 +5,8 @@ import type { ColDef, ICellRendererParams } from 'ag-grid-community';
 import { Alert, Button, Snackbar, Stack, TextField } from '@mui/material';
 import { deleteTraining, getTrainings } from '../api';
 import type { Training } from '../types';
-import { formatDateTime } from '../utils';
+import { customerName, formatDateTime } from '../utils';
 import ConfirmDialog from './ConfirmDialog';
-
-function customerName(training: Training): string {
-  return training.customer ? `${training.customer.firstname} ${training.customer.lastname}` : '';
-}
 
 const dataColumns: ColDef<Training>[] = [
   {

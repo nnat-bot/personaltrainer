@@ -1,9 +1,15 @@
 import { AppBar, Container, CssBaseline, Tab, Tabs, Toolbar, Typography } from '@mui/material';
 import { Link, Outlet, useLocation } from 'react-router';
 
+const pages = [
+  { label: 'Customers', path: '/customers' },
+  { label: 'Trainings', path: '/trainings' },
+  { label: 'Calendar', path: '/calendar' },
+];
+
 function App() {
   const { pathname } = useLocation();
-  const currentTab = pathname.startsWith('/trainings') ? '/trainings' : '/customers';
+  const currentTab = pages.find(page => pathname.startsWith(page.path))?.path ?? '/customers';
 
   return (
     <>
@@ -14,8 +20,9 @@ function App() {
             Personal Trainer
           </Typography>
           <Tabs value={currentTab} textColor="inherit" indicatorColor="secondary">
-            <Tab label="Customers" value="/customers" component={Link} to="/customers" />
-            <Tab label="Trainings" value="/trainings" component={Link} to="/trainings" />
+            {pages.map(page => (
+              <Tab key={page.path} label={page.label} value={page.path} component={Link} to={page.path} />
+            ))}
           </Tabs>
         </Toolbar>
       </AppBar>
