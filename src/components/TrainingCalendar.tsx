@@ -51,6 +51,7 @@ export default function TrainingCalendar() {
         }}
         events={trainings.map(toCalendarEvent)}
         firstDay={1}
+        locale="en-gb"
         eventTimeFormat={timeFormat}
         slotLabelFormat={timeFormat}
         allDaySlot={false}
