@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import { themeMaterial } from 'ag-grid-community';
 import type { ColDef, ICellRendererParams } from 'ag-grid-community';
@@ -19,6 +19,8 @@ const dataColumns: ColDef<Customer>[] = [
   { field: 'city' },
 ];
 
+const exportColumnKeys = dataColumns.map(column => column.field as string);
+
 const defaultColDef: ColDef<Customer> = {
   flex: 1,
   minWidth: 120,
@@ -28,6 +30,7 @@ const defaultColDef: ColDef<Customer> = {
 };
 
 export default function CustomerList() {
+  const gridRef = useRef<AgGridReact<Customer>>(null);
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [search, setSearch] = useState('');
   const [error, setError] = useState('');
@@ -86,6 +89,14 @@ export default function CustomerList() {
     setCustomerToDelete(null);
   };
 
+  const handleExport = () => {
+    gridRef.current?.api.exportDataAsCsv({
+      fileName: 'customers.csv',
+      columnKeys: exportColumnKeys,
+      exportedRows: 'all',
+    });
+  };
+
   const columnDefs: ColDef<Customer>[] = [
     ...dataColumns,
     {
@@ -116,6 +127,9 @@ export default function CustomerList() {
     <Stack spacing={2} sx={{ my: 2 }}>
       <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{ alignItems: { sm: 'center' } }}>
         <CustomerDialog title="New customer" buttonText="Add customer" onSave={handleAdd} />
+        <Button size="small" variant="outlined" onClick={handleExport}>
+          Export CSV
+        </Button>
         <TextField
           size="small"
           label="Search customers"
@@ -129,6 +143,7 @@ export default function CustomerList() {
 
       <div style={{ height: 600, width: '100%' }}>
         <AgGridReact<Customer>
+          ref={gridRef}
           rowData={customers}
           columnDefs={columnDefs}
           defaultColDef={defaultColDef}
