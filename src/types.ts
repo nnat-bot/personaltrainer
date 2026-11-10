@@ -30,3 +30,8 @@ export type TrainingData = {
   duration: number;
   customer: string;
 };
+
+export type ActivityMinutes = {
+  activity: string;
+  minutes: number;
+};

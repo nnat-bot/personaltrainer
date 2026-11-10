@@ -4,7 +4,7 @@ import { Link, Outlet, useLocation } from 'react-router';
 const pages = [
   { label: 'Customers', path: '/customers' },
   { label: 'Trainings', path: '/trainings' },
-  { label: 'Calendar', path: '/calendar' },
+  { label: 'Calendar', path: '/calendar' }, { label: 'Statistics', path: '/statistics' },
 ];
 
 function App() {

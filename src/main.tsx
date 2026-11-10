@@ -9,6 +9,7 @@ import App from './App.tsx';
 import CustomerList from './components/CustomerList';
 import TrainingList from './components/TrainingList';
 import TrainingCalendar from './components/TrainingCalendar';
+import TrainingStatistics from './components/TrainingStatistics';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -21,6 +22,7 @@ const router = createBrowserRouter([
       { path: 'customers', element: <CustomerList /> },
       { path: 'trainings', element: <TrainingList /> },
       { path: 'calendar', element: <TrainingCalendar /> },
+      { path: 'statistics', element: <TrainingStatistics /> },
       { path: '*', element: <Navigate to="/customers" replace /> },
     ],
   },
